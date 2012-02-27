@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+	<raio>10</raio>
+	
+	<time>60</time>
+	<timeDecrease>5</timeDecrease>
+	
+	<maxTimePoints>5</maxTimePoints>
+	
+	<distances>
+		<center>5</center>
+		<middle>10</middle>
+		<end>15</end>
+		<afterEnd>18</afterEnd>
+	</distances>
+	
+	<targetScore>
+		<center>15</center>
+		<middle>10</middle>
+		<end>5</end>
+		<afterEnd>2</afterEnd>
+	</targetScore>
+</data>
