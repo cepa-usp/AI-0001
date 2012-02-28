@@ -2,10 +2,12 @@
 <data>
 	<raio>10</raio>
 	
-	<time>60</time>
+	<time>15</time>
 	<timeDecrease>5</timeDecrease>
 	
 	<maxTimePoints>5</maxTimePoints>
+	
+	<birdScore>20</birdScore>
 	
 	<distances>
 		<center>5</center>
@@ -20,4 +22,9 @@
 		<end>5</end>
 		<afterEnd>2</afterEnd>
 	</targetScore>
+	
+	<somPassaro>sons/acerta-passaro-1.mp3</somPassaro>
+	<somDardo>sons/Joga-dardo.mp3</somDardo>
+	<somPonto>sons/pontos.mp3</somPonto>
+	<somRelogio>sons/relogio-5segundos.mp3</somRelogio>
 </data>

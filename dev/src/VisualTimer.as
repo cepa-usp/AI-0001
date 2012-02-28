@@ -90,6 +90,20 @@ package
 			timerElasped.graphics.lineTo(0, 0);
 		}
 		
+		public function reset():void
+		{
+			timerElasped.graphics.clear();
+			elaspedTime = 0;
+			timerToFollow = null;
+		}
+		
+		public function fullTime():void
+		{
+			timerElasped.graphics.clear();
+			timerElasped.graphics.beginFill(0xFF0000);
+			timerElasped.graphics.drawCircle(0, 0, raioTimer + 2);
+		}
+		
 	}
 
 }
