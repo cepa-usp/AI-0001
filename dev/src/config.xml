@@ -2,7 +2,7 @@
 <data>
 	<raio>10</raio>
 	
-	<time>15</time>
+	<time>60</time>
 	<timeDecrease>5</timeDecrease>
 	
 	<maxTimePoints>5</maxTimePoints>

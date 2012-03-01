@@ -31,7 +31,7 @@ package
 			timerElaspedMask = new Sprite();
 			
 			background.graphics.lineStyle(1, 0x000000);
-			background.graphics.beginFill(0xFFFFFF);
+			background.graphics.beginFill(0xFF0000);
 			background.graphics.drawCircle(0, 0, raioTimer);
 			
 			timerElaspedMask.graphics.lineStyle(1, 0x000000);
@@ -47,15 +47,15 @@ package
 			timerToDraw.addEventListener(TimerEvent.TIMER, updateVisualTimer);
 		}
 		
-		public function setTotalTime(total:Number):void
-		{
-			totalTime = total;
-			secToGrau = 360 / totalTime;
-		}
+		//public function setTotalTime(total:Number):void
+		//{
+			//totalTime = total;
+			//secToGrau = 360 / totalTime;
+		//}
 		
-		public function start(timer:Cronometer, inicial:Number = 0):void
+		public function start(timer:Cronometer, total:Number = 0):void
 		{
-			elaspedTime = inicial;
+			elaspedTime = totalTime - total;
 			timerToFollow = timer;
 			
 			timerToDraw.start();
@@ -76,7 +76,7 @@ package
 			var comp:Number = 2 * raioTimer;
 			
 			timerElasped.graphics.clear();
-			timerElasped.graphics.beginFill(0xFF0000);
+			timerElasped.graphics.beginFill(0xFFFFFF);
 			timerElasped.graphics.moveTo(0, 0);
 			timerElasped.graphics.lineTo(0, -comp);
 			
@@ -100,7 +100,7 @@ package
 		public function fullTime():void
 		{
 			timerElasped.graphics.clear();
-			timerElasped.graphics.beginFill(0xFF0000);
+			timerElasped.graphics.beginFill(0xFFFFFF);
 			timerElasped.graphics.drawCircle(0, 0, raioTimer + 2);
 		}
 		

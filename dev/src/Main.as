@@ -13,6 +13,7 @@ package
 	import flash.events.TimerEvent;
 	import flash.filters.GlowFilter;
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	import flash.media.Sound;
 	import flash.media.SoundChannel;
 	import flash.media.SoundTransform;
@@ -36,10 +37,10 @@ package
 		private const POS_SHOT:String = "POS_SHOT";
 		private const END:String = "END";
 		
-		private const LEGENDA_BEGIN:String = "Clique em OK para iniciar.Atenção ao tempo.";
-		private const LEGENDA_WAITING_SHOT:String = "Preencha as coordenadas e clique em OK.";
-		private const LEGENDA_POS_SHOT:String = "Clique em OK para uma nova posição do alvo.";
-		private const LEGENDA_END:String = "Exercício finalizado. Clique em \"Reset\" para iniciar um novo exercício.";
+		private const LEGENDA_BEGIN:String = "Pressione o botão \"iniciar\" para começar um novo arremesso.";
+		private const LEGENDA_WAITING_SHOT:String = "Digite as coordenadas polares do alvo e pressione \"atirar\".";
+		private const LEGENDA_POS_SHOT:String = "Pressione o botão \"iniciar\" para começar um novo arremesso.";
+		private const LEGENDA_END:String = "Exercício finalizado. Clique em \"reiniciar\" para iniciar um novo exercício.";
 		
 		private var state:String;
 		
@@ -106,6 +107,8 @@ package
 		private function init(e:Event = null):void 
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
+			
+			scrollRect = new Rectangle(0, 0, 700, 600);
 			
 			creditosScreen = new AboutScreen();
 			addChild(creditosScreen);
@@ -187,6 +190,8 @@ package
 		
 		private function createNewPassaro(e:TweenEvent):void 
 		{
+			removeChild(passaro);
+			passaro = null;
 			timerToPassaro.delay = Math.random() * 60000;
 			timerToPassaro.start();
 		}
@@ -222,7 +227,7 @@ package
 			scoreSound = new Sound(new URLRequest(String(xmlConfig.somPonto)));
 			clockSound = new Sound(new URLRequest(String(xmlConfig.somRelogio)));
 			
-			visualTimer.setTotalTime(totalTime);
+			//visualTimer.setTotalTime(totalTime);
 			
 			reset();
 		}
@@ -232,6 +237,7 @@ package
 			botoes.orientacoesBtn.addEventListener(MouseEvent.CLICK, openOrientacoes);
 			botoes.resetButton.addEventListener(MouseEvent.CLICK, reset);
 			botoes.creditos.addEventListener(MouseEvent.CLICK, openCreditos);
+			botoes.tutorialBtn.addEventListener(MouseEvent.CLICK, iniciaTutorial);
 			
 			ferramentas.openTransfer.addEventListener(MouseEvent.CLICK, openCloseTransfer);
 			ferramentas.openRegua.addEventListener(MouseEvent.CLICK, openCloseRuler);
@@ -306,6 +312,7 @@ package
 					startTimer();
 					state = WAITING_SHOT;
 					setLegenda(LEGENDA_WAITING_SHOT);
+					entrada.okBtn.gotoAndStop("ATIRAR");
 					return;
 				case WAITING_SHOT:
 					if (fillComplete()) {
@@ -321,9 +328,10 @@ package
 					startTimer();
 					state = WAITING_SHOT;
 					setLegenda(LEGENDA_WAITING_SHOT);
+					entrada.okBtn.gotoAndStop("ATIRAR");
 					return;
 				case END:
-					
+					reset();
 					return;
 			}
 		}
@@ -344,11 +352,15 @@ package
 			if (regua.visible) {
 				regua.close();
 				ferramentas.openRegua.gotoAndStop(1);
+				regua.x = 80;
+				regua.y = 250;
 			}
 			
 			if (transferidor.visible) {
 				transferidor.close();
 				ferramentas.openTransfer.gotoAndStop(1);
+				transferidor.x = 200;
+				transferidor.y = 200;
 			}
 			
 			visualTimer.reset();
@@ -469,16 +481,18 @@ package
 			var infoTT:ToolTip = new ToolTip(botoes.creditos, "Créditos", 12, 0.8, 100, 0.6, 0.1);
 			var instTT:ToolTip = new ToolTip(botoes.orientacoesBtn, "Orientações", 12, 0.8, 100, 0.6, 0.1);
 			var resetTT:ToolTip = new ToolTip(botoes.resetButton, "Reiniciar", 12, 0.8, 100, 0.6, 0.1);
+			var tutoTT:ToolTip = new ToolTip(botoes.tutorialBtn, "Reiniciar tutorial", 12, 0.8, 200, 0.6, 0.1);
 			
-			var reguaTT:ToolTip = new ToolTip(ferramentas.openRegua, "Abrir/fechar régua", 12, 0.8, 250, 0.6, 0.1);
-			var transferTT:ToolTip = new ToolTip(ferramentas.openTransfer, "Abrir/fechar transferidor", 12, 0.8, 250, 0.6, 0.1);
+			var reguaTT:ToolTip = new ToolTip(ferramentas.openRegua, "Exibir/ocultar régua", 12, 0.8, 250, 0.6, 0.1);
+			var transferTT:ToolTip = new ToolTip(ferramentas.openTransfer, "Exibir/ocultar transferidor", 12, 0.8, 250, 0.6, 0.1);
 			
-			var raioTT:ToolTip = new ToolTip(entrada.mc_raio, "Raio da coordenada", 12, 0.8, 250, 0.6, 0.1);
-			var angleTT:ToolTip = new ToolTip(entrada.mc_angle, "Ângulo de rotação", 12, 0.8, 250, 0.6, 0.1);
+			var raioTT:ToolTip = new ToolTip(entrada.mc_raio, "Raio", 12, 0.8, 250, 0.6, 0.1);
+			var angleTT:ToolTip = new ToolTip(entrada.mc_angle, "Ângulo(em graus)", 12, 0.8, 250, 0.6, 0.1);
 			
 			addChild(infoTT);
 			addChild(instTT);
 			addChild(resetTT);
+			addChild(tutoTT);
 			
 			addChild(reguaTT);
 			addChild(transferTT);
@@ -510,6 +524,8 @@ package
 			
 			marcas.splice(0);
 			audio.stop();
+			
+			entrada.okBtn.gotoAndStop("INICIAR");
 		}
 		
 		/**
@@ -536,7 +552,7 @@ package
 			currentTotalTime -= timeDecrease;
 			timerToFinish.reset();
 			timerToFinish.start();
-			visualTimer.start(timerToFinish, totalTime - currentTotalTime);
+			visualTimer.start(timerToFinish, currentTotalTime);
 			addEventListener(Event.ENTER_FRAME, checkCronometer);
 		}
 		
@@ -569,9 +585,11 @@ package
 			if(currentTotalTime - timeDecrease >= 1){
 				state = POS_SHOT;
 				setLegenda(LEGENDA_POS_SHOT);
+				entrada.okBtn.gotoAndStop("INICIAR");
 			}else {
 				state = END;
 				setLegenda(LEGENDA_END);
+				entrada.okBtn.gotoAndStop("REINICIAR");
 			}
 		}
 		
@@ -584,7 +602,7 @@ package
 		private var tutoPos:int;
 		//private var tutoPhaseFinal:Boolean;
 		private var tutoSequence:Array = ["Seu objetivo é atingir o alvo.",
-										  "Para isso você deve digitar aqui as coordenadas polares dele e clicar em \"Atirar\" (ou pressionar \"Enter\").",
+										  "Para isso você deve digitar aqui as coordenadas polares dele e clicar em \"Atirar\".",
 										  "Você pode utilizar régua e transferidor para medir essas coordenadas, mas...",
 										  "... mas o seu tempo é curto e quanto mais rápido você responder o exercício, mais pontos fará.",
 										  "Quando em dúvida, leia aqui embaixo qual deve ser o próximo passo."];
@@ -601,13 +619,13 @@ package
 				pointsTuto = 	[new Point(alvo.x, alvo.y - (alvoUser.height / 2)),
 								new Point(entrada.x + entrada.width, entrada.y + (entrada.height / 2)),
 								new Point(ferramentas.x + ferramentas.width, ferramentas.y + (ferramentas.height / 2)),
-								new Point(tempoPonto.x - (tempoPonto.width / 2), tempoPonto.y),
+								new Point(tempoPonto.x - (tempoPonto.width / 2), tempoPonto.y - 30),
 								new Point(legenda.x + 50, legenda.y - legenda.height)];
 								
 				tutoBaloonPos = [[CaixaTexto.BOTTON, CaixaTexto.CENTER],
 								[CaixaTexto.LEFT, CaixaTexto.CENTER],
 								[CaixaTexto.LEFT, CaixaTexto.FIRST],
-								[CaixaTexto.RIGHT, CaixaTexto.CENTER],
+								[CaixaTexto.RIGHT, CaixaTexto.FIRST],
 								[CaixaTexto.BOTTON, CaixaTexto.FIRST]];
 			}
 			balao.removeEventListener(Event.CLOSE, closeBalao);
