@@ -2,6 +2,7 @@ package
 {
 	import cepa.utils.Cronometer;
 	import cepa.utils.ToolTip;
+	import fl.transitions.easing.Elastic;
 	import fl.transitions.easing.None;
 	import fl.transitions.Tween;
 	import fl.transitions.TweenEvent;
@@ -98,6 +99,8 @@ package
 		private var timerToPassaro:Timer;
 		private var tweenPassaro:Tween;
 		
+		private var shotAnimation:MovieClip;
+		
 		public function Main() 
 		{
 			if (stage) init();
@@ -127,6 +130,10 @@ package
 			timerToFinish = new Cronometer();
 			
 			audio = new SoundChannel();
+			
+			shotAnimation = new MovieClip();
+			shotAnimation.gotoAndStop("FINISH");
+			shotAnimation.addEventListener(Event.ACTIVATE, shoot);
 			
 			visualTimer = new VisualTimer();
 			visualTimer.x = 0;
@@ -182,12 +189,30 @@ package
 			
 			addChild(passaro);
 			setChildIndex(passaro, Math.round(Math.random() * 5));
-			tweenPassaro = new Tween(passaro, "x", None.easeNone, passaro.x, finish, Math.round(Math.random() * 4) + 4, true);
-			tweenPassaro.addEventListener(TweenEvent.MOTION_FINISH, createNewPassaro);
+			tweenPassaro = new Tween(passaro, "x", None.easeNone, passaro.x, finish, Math.round(Math.random() * 4) + 6, true);
+			tweenPassaro.addEventListener(TweenEvent.MOTION_FINISH, createNewPassaro, false, 0, true);
 		}
 		
 		private function createNewPassaro(e:TweenEvent):void 
 		{
+			if (tweenPassaro != null) {
+				if (tweenPassaro.isPlaying) {
+					tweenPassaro.stop();
+				}
+			}
+			
+			if (tweenAlpha != null) {
+				if (tweenAlpha.isPlaying) {
+					tweenAlpha.stop();
+				}
+			}
+			
+			if (tweenYPassaro != null) {
+				if (tweenYPassaro.isPlaying) {
+					tweenYPassaro.stop();
+				}
+			}
+			
 			removeChild(passaro);
 			passaro = null;
 			timerToPassaro.delay = Math.random() * 60000;
@@ -315,7 +340,8 @@ package
 				case WAITING_SHOT:
 					if (fillComplete()) {
 						timerFinished();
-						shoot();
+						//shoot();
+						startShotAnimation();
 					}else {
 						
 					}
@@ -363,7 +389,12 @@ package
 			visualTimer.reset();
 		}
 		
-		private function shoot():void 
+		private function startShotAnimation():void 
+		{
+			shotAnimation.gotoAndPlay("SHOT");
+		}
+		
+		private function shoot(e:Event = null):void 
 		{
 			entrada.raio.mouseEnabled = false;
 			entrada.angle.mouseEnabled = false;
@@ -387,8 +418,6 @@ package
 			addChild(marca);
 			
 			evalShot();
-			
-			//TO DO: Verificar se acertou o pássaro(eastern egg).
 		}
 		
 		private function evalShot():void 
@@ -398,9 +427,10 @@ package
 			
 			if(passaro != null)	birdShot = MovieClip(passaro).hitTestPoint(alvoUser.x, alvoUser.y);
 			
-			if (birdShot) {//Eastern egg!!!
+			if (true) {//Eastern egg!!!
 				currentScore += score_bird;
 				audio = birdSound.play();
+				birdShoted();
 				//Caso o pássaro seja atinjido fazer animação dele caindo???
 			}
 			
@@ -416,6 +446,16 @@ package
 			
 			
 			setScore(currentScore);
+		}
+		
+		private var tweenYPassaro:Tween;
+		private var tweenAlpha:Tween;
+		private function birdShoted():void 
+		{
+			//tweenPassaro.stop();
+			tweenAlpha = new Tween(passaro, "alpha", None.easeNone, 1, 0, 1, true);
+			tweenAlpha.addEventListener(TweenEvent.MOTION_FINISH, createNewPassaro, false, 0, true);
+			tweenYPassaro = new Tween(passaro, "y", None.easeNone, passaro.y, passaro.y + 200, 1, true);
 		}
 		
 		private function setScore(score:Number):void
