@@ -35,10 +35,28 @@
 			//ruler.scaleX = ruler.scaleY = 0.52;
 			//ruler.width = rulerWidth;
 			//ruler.scaleY = 0.52;
+			ruler.rot.gotoAndStop(1);
+			ruler.mov.gotoAndStop(1);
 			doTheTicks();
 			addEventListener(MouseEvent.MOUSE_DOWN, rotateRuler);
+			stage.addEventListener(MouseEvent.MOUSE_MOVE, overOut);
 			stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMoveEvent);
 			stage.addEventListener(MouseEvent.MOUSE_UP, onMouseUpEvent);
+		}
+		
+		private function overOut(e:MouseEvent):void 
+		{
+			if (MovieClip(ruler.rot).hitTestPoint(stage.mouseX, stage.mouseY, true)) {
+				ruler.rot.gotoAndStop(2);
+			}else {
+				ruler.rot.gotoAndStop(1);
+			}
+			
+			if (MovieClip(ruler.mov).hitTestPoint(stage.mouseX, stage.mouseY, true)) {
+				ruler.mov.gotoAndStop(2);
+			}else {
+				ruler.mov.gotoAndStop(1);
+			}
 		}
 		
 		private function stopMove(event:MouseEvent):void {
@@ -48,7 +66,9 @@
 		}
 		
 		public function rotateRuler(event:MouseEvent) : void {
-			if (event.target.mouseY < -90) {
+			//if (event.target.mouseY < -90) {
+			trace(this.mouseY);
+			if (this.mouseY <= 15) {
 				rotating = true;
 				startAngle = (Math.atan2(stage.mouseY - y, stage.mouseX - x)) * 180 / Math.PI;
 				startOrientation = rotation;

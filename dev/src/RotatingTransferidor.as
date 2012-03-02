@@ -5,6 +5,7 @@
 	import flash.events.MouseEvent;
 	import flash.display.Sprite;
 	import flash.display.DisplayObject;
+	import flash.filters.GlowFilter;
 	import flash.geom.*;
 	
 	public class RotatingTransferidor extends MovieClip {
@@ -22,6 +23,9 @@
 		var matrixCorrente:Matrix;
 		var matrix2:Matrix;
 		
+		private var filter:GlowFilter = new GlowFilter(0xFF0000, 1, 12, 12, 5);
+		private var inicialMatrix:Matrix;
+		
 		public function RotatingTransferidor () {
 			if (stage) init();
 			else addEventListener(Event.ADDED_TO_STAGE, init);
@@ -34,6 +38,37 @@
 			ruler.transferidorC.addEventListener(MouseEvent.MOUSE_DOWN, scaleRuler);
 			ruler.transferidorB.addEventListener(MouseEvent.MOUSE_DOWN, rotateRuler);
 			ruler.transferidorA.addEventListener(MouseEvent.MOUSE_DOWN, moveRuler);
+			
+			ruler.transferidorC.inner.gotoAndStop(1);
+			ruler.transferidorB.inner.gotoAndStop(1);
+			ruler.transferidorA.inner.gotoAndStop(1);
+			
+			ruler.transferidorC.inner.addEventListener(MouseEvent.MOUSE_OVER, overHandler);
+			ruler.transferidorB.inner.addEventListener(MouseEvent.MOUSE_OVER, overHandler);
+			ruler.transferidorA.inner.addEventListener(MouseEvent.MOUSE_OVER, overHandler);
+			
+			ruler.transferidorC.inner.addEventListener(MouseEvent.MOUSE_OUT, outHandler);
+			ruler.transferidorB.inner.addEventListener(MouseEvent.MOUSE_OUT, outHandler);
+			ruler.transferidorA.inner.addEventListener(MouseEvent.MOUSE_OUT, outHandler);
+			
+			this.x = 200;
+			this.y = 200;
+			
+			inicialMatrix = this.transform.matrix.clone();
+		}
+		
+		private function overHandler(e:MouseEvent):void 
+		{
+			var tg:MovieClip = MovieClip(e.target);
+			//tg.filters = [filter];
+			tg.gotoAndStop(2);
+		}
+		
+		private function outHandler(e:MouseEvent):void 
+		{
+			var tg:MovieClip = MovieClip(e.target);
+			//tg.filters = [];
+			tg.gotoAndStop(1);
 		}
 		
 		private function scaleRuler(e:MouseEvent):void
@@ -46,7 +81,7 @@
 		
 		private function scalingRuler(e:MouseEvent):void
 		{
-			var newRadius:Number = Math.sqrt((this.x - stage.mouseX)*(this.x - stage.mouseX) + (this.y - stage.mouseY)*(this.y - stage.mouseY));
+			var newRadius:Number = Math.sqrt((this.x - stage.mouseX) * (this.x - stage.mouseX) + (this.y - stage.mouseY) * (this.y - stage.mouseY));
 			var matrix:Matrix = new Matrix();
 			matrix.scale(1 + ((newRadius - radius) / radius), 1 + ((newRadius - radius) / radius));
 			
@@ -63,7 +98,6 @@
 			this.transform.matrix = matrix2;
 			
 			if (this.width < 300) this.transform.matrix = undoMatrix;
-			
 			//if(1+ (newRadius - radius)/radius > 0.5)
 				//this.scaleX = this.scaleY = 1 + ((newRadius - radius)/radius);
 		}
@@ -184,6 +218,11 @@
 		public function retornaVisibilidade():Boolean
 		{
 			return visivel;
+		}
+		
+		public function reset():void
+		{
+			this.transform.matrix = inicialMatrix;
 		}
 	}
 }
