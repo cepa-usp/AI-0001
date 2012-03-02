@@ -100,6 +100,7 @@ package
 		private var tweenPassaro:Tween;
 		
 		private var shotAnimation:MovieClip;
+		private var pontosShot:Pontos;
 		
 		public function Main() 
 		{
@@ -131,9 +132,8 @@ package
 			
 			audio = new SoundChannel();
 			
-			shotAnimation = new MovieClip();
+			shotAnimation = maos;//new MovieClip();
 			shotAnimation.gotoAndStop("FINISH");
-			shotAnimation.addEventListener(Event.ACTIVATE, shoot);
 			
 			visualTimer = new VisualTimer();
 			visualTimer.x = 0;
@@ -168,6 +168,14 @@ package
 			timerToPassaro = new Timer(Math.random() * 60000, 1);
 			timerToPassaro.addEventListener(TimerEvent.TIMER_COMPLETE, criaPassaro);
 			timerToPassaro.start();
+			
+			penasPassaro = new PenasPassaro();
+			penasPassaro.gotoAndStop("FIM");
+			addChild(penasPassaro);
+			
+			pontosShot = new Pontos();
+			pontosShot.gotoAndStop("FIM");
+			addChild(pontosShot);
 		}
 		
 		private function criaPassaro(e:TimerEvent):void 
@@ -280,6 +288,8 @@ package
 			
 			entrada.raio.addEventListener(KeyboardEvent.KEY_UP, keyUpHandler);
 			entrada.angle.addEventListener(KeyboardEvent.KEY_UP, keyUpHandler);
+			
+			shotAnimation.addEventListener(Event.ACTIVATE, shoot);
 		}
 		
 		private function overBtn(e:MouseEvent):void 
@@ -391,11 +401,19 @@ package
 		
 		private function startShotAnimation():void 
 		{
+			var raioUser:Number = Number(entrada.raio.text.replace(",", ".")) * raioPalco / raioMax;
+			var angleUser:Number = - Number(entrada.angle.text.replace(",", ".")) * Math.PI / 180;
+			
+			var posX:Number = (raioUser * Math.cos(angleUser)) + posCentral.x;
+			if (posX <= shotAnimation.x) shotAnimation.scaleX = 1;
+			else shotAnimation.scaleX = -1;
 			shotAnimation.gotoAndPlay("SHOT");
 		}
 		
 		private function shoot(e:Event = null):void 
 		{
+			if (entrada.raio.text == "" || entrada.angle.text == "") return;
+			
 			entrada.raio.mouseEnabled = false;
 			entrada.angle.mouseEnabled = false;
 			
@@ -424,10 +442,11 @@ package
 		{
 			var distToAlvo:Number = Point.distance(new Point(alvoUser.x, alvoUser.y), new Point(alvo.x, alvo.y));
 			var birdShot:Boolean = false;
+			var shotScore:Number = 0;
 			
 			if(passaro != null)	birdShot = MovieClip(passaro).hitTestPoint(alvoUser.x, alvoUser.y);
 			
-			if (true) {//Eastern egg!!!
+			if (birdShot) {//Eastern egg!!!
 				currentScore += score_bird;
 				audio = birdSound.play();
 				birdShoted();
@@ -435,23 +454,33 @@ package
 			}
 			
 			if (distToAlvo <= distance_center) {//Ponuação máxima
-				currentScore += score_center;
+				shotScore = score_center;
 			}else if (distToAlvo <= distance_middle) {
-				currentScore += score_middle;
+				shotScore = score_middle;
 			}else if (distToAlvo <= distance_end) {
-				currentScore += score_end;
+				shotScore = score_end;
 			}else if (distToAlvo <= distance_posEnd) {
-				currentScore += score_posEnd;
+				shotScore = score_posEnd;
 			}
 			
+			if (shotScore > 0) {
+				currentScore += shotScore;
+				pontosShot.x = alvoUser.x;
+				pontosShot.y = alvoUser.y;
+				pontosShot.setPontuacao(shotScore);
+			}
 			
 			setScore(currentScore);
 		}
 		
 		private var tweenYPassaro:Tween;
 		private var tweenAlpha:Tween;
+		private var penasPassaro:MovieClip;
 		private function birdShoted():void 
 		{
+			penasPassaro.x = passaro.x;
+			penasPassaro.y = passaro.y;
+			penasPassaro.gotoAndPlay("INICIO");
 			//tweenPassaro.stop();
 			tweenAlpha = new Tween(passaro, "alpha", None.easeNone, 1, 0, 1, true);
 			tweenAlpha.addEventListener(TweenEvent.MOTION_FINISH, createNewPassaro, false, 0, true);
