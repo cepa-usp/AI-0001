@@ -48,7 +48,9 @@
 		}
 		
 		public function rotateRuler(event:MouseEvent) : void {
-			if (event.target.mouseY < -90) {
+			//if (event.target.mouseY < -90) {
+			trace(this.mouseY);
+			if (this.mouseY <= 15) {
 				rotating = true;
 				startAngle = (Math.atan2(stage.mouseY - y, stage.mouseX - x)) * 180 / Math.PI;
 				startOrientation = rotation;

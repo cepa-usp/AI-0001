@@ -148,8 +148,6 @@ package
 			addChild(transferidor);
 			transferidor.atractors = [posCentral];
 			transferidor.close();
-			transferidor.x = 200;
-			transferidor.y = 200;
 			
 			setChildIndex(entrada, numChildren - 1);
 			setChildIndex(ferramentas, numChildren - 1);
@@ -349,19 +347,18 @@ package
 			entrada.raio.text = "";
 			entrada.angle.text = "";
 			
-			if (regua.visible) {
+			//if (regua.visible) {
 				regua.close();
 				ferramentas.openRegua.gotoAndStop(1);
 				regua.x = 80;
 				regua.y = 250;
-			}
+			//}
 			
-			if (transferidor.visible) {
+			//if (transferidor.visible) {
 				transferidor.close();
 				ferramentas.openTransfer.gotoAndStop(1);
-				transferidor.x = 200;
-				transferidor.y = 200;
-			}
+				transferidor.reset();
+			//}
 			
 			visualTimer.reset();
 		}
