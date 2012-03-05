@@ -171,6 +171,7 @@ package
 			
 			penasPassaro = new PenasPassaro();
 			penasPassaro.gotoAndStop("FIM");
+			penasPassaro.scaleX = penasPassaro.scaleY = 2;
 			addChild(penasPassaro);
 			
 			pontosShot = new Pontos();
@@ -209,17 +210,17 @@ package
 				}
 			}
 			
-			if (tweenAlpha != null) {
-				if (tweenAlpha.isPlaying) {
-					tweenAlpha.stop();
-				}
-			}
+			//if (tweenAlpha != null) {
+				//if (tweenAlpha.isPlaying) {
+					//tweenAlpha.stop();
+				//}
+			//}
 			
-			if (tweenYPassaro != null) {
-				if (tweenYPassaro.isPlaying) {
-					tweenYPassaro.stop();
-				}
-			}
+			//if (tweenYPassaro != null) {
+				//if (tweenYPassaro.isPlaying) {
+					//tweenYPassaro.stop();
+				//}
+			//}
 			
 			removeChild(passaro);
 			passaro = null;
@@ -459,8 +460,10 @@ package
 				shotScore = score_middle;
 			}else if (distToAlvo <= distance_end) {
 				shotScore = score_end;
-			}else if (distToAlvo <= distance_posEnd) {
-				shotScore = score_posEnd;
+			}else if (score_posEnd > 0){
+				if (distToAlvo <= distance_posEnd) {
+					shotScore = score_posEnd;
+				}
 			}
 			
 			if (shotScore > 0) {
@@ -473,18 +476,22 @@ package
 			setScore(currentScore);
 		}
 		
-		private var tweenYPassaro:Tween;
-		private var tweenAlpha:Tween;
+		//private var tweenYPassaro:Tween;
+		//private var tweenAlpha:Tween;
 		private var penasPassaro:MovieClip;
 		private function birdShoted():void 
 		{
+			setChildIndex(penasPassaro, numChildren - 1);
 			penasPassaro.x = passaro.x;
 			penasPassaro.y = passaro.y;
 			penasPassaro.gotoAndPlay("INICIO");
+			
+			passaro.alpha = 0;
+			createNewPassaro(null);
 			//tweenPassaro.stop();
-			tweenAlpha = new Tween(passaro, "alpha", None.easeNone, 1, 0, 1, true);
-			tweenAlpha.addEventListener(TweenEvent.MOTION_FINISH, createNewPassaro, false, 0, true);
-			tweenYPassaro = new Tween(passaro, "y", None.easeNone, passaro.y, passaro.y + 200, 1, true);
+			//tweenAlpha = new Tween(passaro, "alpha", None.easeNone, 1, 0, 1, true);
+			//tweenAlpha.addEventListener(TweenEvent.MOTION_FINISH, createNewPassaro, false, 0, true);
+			//tweenYPassaro = new Tween(passaro, "y", None.easeNone, passaro.y, passaro.y + 200, 1, true);
 		}
 		
 		private function setScore(score:Number):void

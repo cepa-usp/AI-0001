@@ -10,17 +10,17 @@
 	<birdScore>20</birdScore>
 	
 	<distances>
-		<center>5</center>
-		<middle>10</middle>
-		<end>15</end>
-		<afterEnd>18</afterEnd>
+		<center>9.05</center>
+		<middle>18.1</middle>
+		<end>27.15</end>
+		<afterEnd>0</afterEnd>
 	</distances>
 	
 	<targetScore>
 		<center>15</center>
 		<middle>10</middle>
 		<end>5</end>
-		<afterEnd>2</afterEnd>
+		<afterEnd>0</afterEnd>
 	</targetScore>
 	
 	<somPassaro>sons/acerta-passaro-1.mp3</somPassaro>
