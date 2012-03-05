@@ -89,8 +89,8 @@ package
 		private var alvoUser:AlvoUsuario;
 		private var marcas:Array = [];
 		
-		private var posCentral:Point = new Point(339.3, 248.55);
-		private var raioPalco:Number = 388.3 / 2;
+		private var posCentral:Point = new Point(350, 230);
+		private var raioPalco:Number = 430 / 2;
 		
 		private var regua:RotatingRuler;
 		private var transferidor:RotatingTransferidor;
@@ -406,8 +406,8 @@ package
 			var angleUser:Number = - Number(entrada.angle.text.replace(",", ".")) * Math.PI / 180;
 			
 			var posX:Number = (raioUser * Math.cos(angleUser)) + posCentral.x;
-			if (posX <= shotAnimation.x) shotAnimation.scaleX = 1;
-			else shotAnimation.scaleX = -1;
+			if (posX >= posCentral.x) shotAnimation.scaleX = -1;
+			else shotAnimation.scaleX = 1;
 			shotAnimation.gotoAndPlay("SHOT");
 		}
 		
@@ -425,6 +425,9 @@ package
 			
 			alvoUser.x = (raioUser * Math.cos(angleUser)) + posCentral.x;
 			alvoUser.y = (raioUser * Math.sin(angleUser)) + posCentral.y;
+			if (alvoUser.x >= posCentral.x) alvoUser.scaleX = -1;
+			else alvoUser.scaleX = 1;
+			
 			alvoUser.visible = true;
 			
 			audio.stop();
@@ -435,6 +438,8 @@ package
 			marca.y = alvoUser.y;
 			marcas.push(marca);
 			addChild(marca);
+			
+			setChildIndex(alvoUser, getChildIndex(marca));
 			
 			evalShot();
 		}

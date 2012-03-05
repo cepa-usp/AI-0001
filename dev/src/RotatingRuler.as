@@ -10,12 +10,12 @@
 	public class RotatingRuler extends MovieClip {
 		
 		private var ruler:Ruler = new Ruler();
-		private var rulerWidth:uint = 300;//450;
+		private var rulerWidth:uint = 225;//450;
 		private var rulerHeight:uint = 100;//150;
 		private var startAngle:Number;
 		private var rotating:Boolean;
 		private var bigTickMm:Array = new Array();
-		private var MiliToPix = 0.72;
+		private var MiliToPix = 0.4285// * 2;
 		private var startOrientation:Number;
 		private var arrayAtractors:Array = new Array();
 		private var clickOfSet:Point = new Point();
@@ -33,7 +33,10 @@
 			//rulerWidth = 500 * MiliToPix + 30;
 //			ruler.transform.colorTransform = new ColorTransform(1,1,1,0.2);
 			//ruler.scaleX = ruler.scaleY = 0.52;
-			//ruler.width = rulerWidth;
+			ruler.base.width = rulerWidth;
+			ruler.right.x = -4.5 + rulerWidth;
+			ruler.mov.width = rulerWidth + 25;
+			ruler.rot.width = rulerWidth + 25;
 			//ruler.scaleY = 0.52;
 			ruler.rot.gotoAndStop(1);
 			ruler.mov.gotoAndStop(1);
@@ -162,7 +165,7 @@
 		}
 		
 		private function doTheTicks():void {
-			for (var m = 0; m <= 500; m = m + 5) {  // Desenha os ticks
+			for (var m = 0; m <= 500; m = m + 10) {  // Desenha os ticks
 				bigTickMm[m] = new Cent();
 				bigTickMm[m].unit.text = m / 50;
 				if ((m / 50) - (Math.floor(m / 50)) != 0) bigTickMm[m].unit.visible = false; // Define como invisível os valores não-múltiplos de 50
