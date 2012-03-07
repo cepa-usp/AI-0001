@@ -290,7 +290,7 @@ package
 			entrada.raio.addEventListener(KeyboardEvent.KEY_UP, keyUpHandler);
 			entrada.angle.addEventListener(KeyboardEvent.KEY_UP, keyUpHandler);
 			
-			shotAnimation.addEventListener(Event.ACTIVATE, shoot);
+			shotAnimation.addEventListener("shoot", shoot);
 		}
 		
 		private function overBtn(e:MouseEvent):void 
