@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+	<raio>10</raio>
+	
+	<time>60</time>
+	<timeDecrease>5</timeDecrease>
+	
+	<maxTimePoints>5</maxTimePoints>
+	
+	<birdScore>20</birdScore>
+	
+	<distances>
+		<center>9.05</center>
+		<middle>18.1</middle>
+		<end>27.15</end>
+		<afterEnd>0</afterEnd>
+	</distances>
+	
+	<targetScore>
+		<center>15</center>
+		<middle>10</middle>
+		<end>5</end>
+		<afterEnd>0</afterEnd>
+	</targetScore>
+	
+	<somPassaro>sons/acerta-passaro-1.mp3</somPassaro>
+	<somDardo>sons/Joga-dardo.mp3</somDardo>
+	<somPonto>sons/pontos.mp3</somPonto>
+	<somRelogio>sons/relogio-5segundos.mp3</somRelogio>
+</data>
