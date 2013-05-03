@@ -186,15 +186,17 @@ package
 			
 			if (Math.random() > 0.5) {
 				passaro.x = -100;
-				passaro.y = Math.random() * 400 + 50;
+				//passaro.y = Math.random() * 400 + 50;
 				finish = 800;
 				
 			}else {
 				passaro.x = 800;
-				passaro.y = Math.random() * 400 + 50;
+				//passaro.y = Math.random() * 400 + 50;
 				finish = -100;
 				passaro.scaleX = -1;
 			}
+			
+			passaro.y = Math.random() * 100 * (Math.random() > 0.5 ? 1 : -1) + alvo.y;
 			
 			addChild(passaro);
 			setChildIndex(passaro, Math.round(Math.random() * 5));
@@ -287,8 +289,10 @@ package
 			entrada.okBtn.addEventListener(MouseEvent.CLICK, switchState);
 			entrada.okBtn.buttonMode = true;
 			
-			entrada.raio.addEventListener(KeyboardEvent.KEY_UP, keyUpHandler);
-			entrada.angle.addEventListener(KeyboardEvent.KEY_UP, keyUpHandler);
+			//entrada.raio.addEventListener(KeyboardEvent.KEY_UP, keyUpHandler);
+			//entrada.angle.addEventListener(KeyboardEvent.KEY_UP, keyUpHandler);
+			
+			stage.addEventListener(KeyboardEvent.KEY_UP, keyUpHandler);
 			
 			shotAnimation.addEventListener("shoot", shoot);
 		}
@@ -308,7 +312,7 @@ package
 		private var glow:GlowFilter = new GlowFilter(0xFF0000);
 		private function keyUpHandler(e:KeyboardEvent):void 
 		{
-			if (e.charCode == Keyboard.ENTER) {
+			if (e.charCode == Keyboard.SPACE) {
 				switchState(null);
 			}
 		}
@@ -347,6 +351,7 @@ package
 					state = WAITING_SHOT;
 					setLegenda(LEGENDA_WAITING_SHOT);
 					entrada.okBtn.gotoAndStop("ATIRAR");
+					stage.focus = entrada.raio;
 					return;
 				case WAITING_SHOT:
 					if (fillComplete()) {
@@ -364,6 +369,7 @@ package
 					state = WAITING_SHOT;
 					setLegenda(LEGENDA_WAITING_SHOT);
 					entrada.okBtn.gotoAndStop("ATIRAR");
+					stage.focus = entrada.raio;
 					return;
 				case END:
 					reset();
